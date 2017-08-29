@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  21 JUL 2017 14:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  29 AUG 2017 16:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -7,7 +7,7 @@ entering extended mode
 (./Thesis.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
-(/usr/local/texlive/2017/texmf-dist/tex/latex/pittetd/pittetd.cls
+(/Users/runyu/Library/texmf/tex/latex/pittetd/pittetd.cls
 Document Class: pittetd 2004/08/17 v1.618 University of Pittsburgh ETD (Electro
 nic Thesis & Dissertations) class
 \@etdaux=\write3
@@ -36,12 +36,10 @@ nic Thesis & Dissertations) class
 \@expectedprelim=\toks14
 \@committee=\toks15
 \@coadv=\toks16
-(/usr/local/texlive/2017/texmf-dist/tex/latex/pittetd/pitetd12.clo)
-
-Class pittetd Warning: No Thesis.etd file. Entering semifinal mode.
-
+(/Users/runyu/Library/texmf/tex/latex/pittetd/pitetd12.clo) (./Thesis.etd)
 \subject=\toks17
-) (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/hyperref.sty
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2017/03/14 v6.85a Hypertext links for LaTeX
 
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
@@ -302,6 +300,8 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 41.
 LaTeX Info: Redefining \pageref on input line 41.
 LaTeX Info: Redefining \nameref on input line 41.
+
+(./Thesis.out) (./Thesis.out)
 \@outlinefile=\write4
 \openout4 = `Thesis.out'.
 
@@ -349,10 +349,11 @@ Abstract
 
 ]
 Table of Contents
+(./Thesis.toc)
 \tf@toc=\write5
 \openout5 = `Thesis.toc'.
 
-[4
+ [4
 
 ]
 Chapter 1
@@ -363,48 +364,40 @@ Chapter 1
 Chapter 2
 [2
 
-]
+] [3]
 Chapter 3
-
-Class pittetd Warning: Remember to run the document with `final' option.
-
 \openout3 = `Thesis.etd'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 92.
-[3
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 96.
+[4
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 92.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 96.
  (./Thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 92.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 92.
-
-
-Package rerunfilecheck Warning: File `Thesis.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `Thesis.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  3BE71359804AD7F0882665478857369C;572.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 92.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 96.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 96.
+Package rerunfilecheck Info: File `Thesis.out' has not changed.
+(rerunfilecheck)             Checksum: 5D3D129CC2FF0EAF852C0000AD4EFB22;581.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 96.
  ) 
 Here is how much of TeX's memory you used:
- 5871 strings out of 492995
- 84934 string characters out of 6132704
- 176825 words of memory out of 5000000
- 9372 multiletter control sequences out of 15000+600000
+ 5887 strings out of 492995
+ 85065 string characters out of 6132704
+ 178872 words of memory out of 5000000
+ 9378 multiletter control sequences out of 15000+600000
  7963 words of font info for 29 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,5n,28p,294b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 34i,5n,28p,910b,381s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
-/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></u
-sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb>
-Output written on Thesis.pdf (7 pages, 58752 bytes).
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></us
+r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/l
+ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on Thesis.pdf (8 pages, 77483 bytes).
 PDF statistics:
- 68 PDF objects out of 1000 (max. 8388607)
- 54 compressed objects within 1 object stream
- 18 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 120 PDF objects out of 1000 (max. 8388607)
+ 102 compressed objects within 2 object streams
+ 20 named destinations out of 1000 (max. 500000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
