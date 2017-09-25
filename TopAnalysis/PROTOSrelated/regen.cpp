@@ -49,18 +49,40 @@ std::istream& operator>> (std::istream& is, singleTop &st)
     return is;
 };
 
-//double particleMass(int id)
-//{
-//
-//    switch (id) {
-//        case <#constant#>:
-//            <#statements#>
-//            break;
-//
-//        default:
-//            break;
-//    }
-//}
+double particleMass(int id)
+{
+    switch (id) {
+        case 1:
+        case -1:
+            return 0.0048;
+        case 2:
+        case -2:
+            return 0.0023;
+        case 3:
+        case -3:
+            return 0.095;
+        case 4:
+        case -4:
+            return 1.29;
+        case 5:
+        case -5:
+            return 4.18;
+        case 6:
+        case -6:
+            return 172.44;
+        case 11:
+        case -11:
+            return 0.000511;
+        case 13:
+        case -13:
+            return 0.10566;
+        case 15:
+        case -15:
+            return 1.7768;
+    }
+    return 0;
+};
+
 void regen()
 {
     gROOT->Reset();
@@ -75,7 +97,8 @@ void regen()
 
     std::vector<TLorentzVector> neutrinos;
     std::vector<TLorentzVector> leptons;
-    std::vector<TLorentzVector> bottoms;
+    std::vector<TLorentzVector> bottom;
+    std::vector<TLorentzVector> top;
     TLorentzVector currentParticle;
     
     for (int i = 0; i < sT.size(); i++) {
@@ -93,7 +116,8 @@ void regen()
                                    sT[i].bblvq[1].pZ,
                                    sqrt(pow(sT[i].bblvq[1].pX,2)
                                         +pow(sT[i].bblvq[1].pY,2)
-                                        +pow(sT[i].bblvq[1].pZ,2)));
+                                        +pow(sT[i].bblvq[1].pZ,2)
+                                        +pow(particleMass(sT[i].bblvq[1].particleId),2)));
         leptons.push_back(currentParticle);
         
         currentParticle.SetPxPyPzE(sT[i].bblvq[2].pX,
@@ -101,14 +125,20 @@ void regen()
                                    sT[i].bblvq[2].pZ,
                                    sqrt(pow(sT[i].bblvq[2].pX,2)
                                         +pow(sT[i].bblvq[2].pY,2)
-                                        +pow(sT[i].bblvq[2].pZ,2)));
-        bottoms.push_back(currentParticle);
+                                        +pow(sT[i].bblvq[2].pZ,2)
+                                        +pow(particleMass(sT[i].bblvq[2].particleId),2)));
+        bottom.push_back(currentParticle);
+        
+        currentParticle = neutrinos.back() + bottom.back() + leptons.back();
+        top.push_back(currentParticle);
     }
     
+    TH1F *h1 = new TH1F("Top", "Top Events", 1000, 100, 250);
+    for (int i=0; i < top.size(); i++) {
+        h1->Fill(top[i].M());
+    }
+    h1->Draw();
     
-    std::cout << sT[150].eventNumber << std::endl;
-    std::cout << neutrinos[0].Pt() << std::endl;
-    std::cout << leptons[111].Px() << std::endl;
-    std::cout << bottoms[222].Px() << std::endl;
+
 
 }
