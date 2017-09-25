@@ -22,7 +22,7 @@ struct product{
 struct singleTop{
     int eventNumber;
     double weight;
-    double unknown;
+    double eventQ;
     substrate qg[2];
     product bblvq[5];
 };
@@ -40,7 +40,7 @@ std::istream& operator>> (std::istream& is, product &p)
 };
 std::istream& operator>> (std::istream& is, singleTop &st)
 {
-    is >> st.eventNumber >> st.weight >> st.unknown;
+    is >> st.eventNumber >> st.weight >> st.eventQ;
     is >> st.qg[0];
     is >> st.qg[1];
     for (int i = 0; i < 5; i++) {
