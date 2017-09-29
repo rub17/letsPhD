@@ -116,7 +116,7 @@ double particleMass(int id)
 void regen()
 {
     gROOT->Reset();
-    std::ifstream inStream("tbj.unw");
+    std::ifstream inStream("../Events/tbj.wgt");
     std::vector<singleTop> sT;
     
     while (!inStream.eof()) {
