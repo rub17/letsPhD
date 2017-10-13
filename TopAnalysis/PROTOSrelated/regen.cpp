@@ -116,7 +116,7 @@ double particleMass(int id)
 void regen()
 {
     gROOT->Reset();
-    std::ifstream inStream("../Events/tbj.wgt");
+    std::ifstream inStream("../Events/tbj.unw");
     std::vector<singleTop> sT;
     
     while (!inStream.eof()) {
@@ -222,7 +222,7 @@ void regen()
     TH1F *h6 = new TH1F("PhiStar", "PhiStar", 50, -3.5, 3.5);
     
     for (int i=0; i < top.size(); i++) {
-        h3->Fill(cosTheta[i]);
+        h3->Fill(1-cosTheta[i]);
         h4->Fill(phi[i]);
         h5->Fill(cosThetaStar[i]);
         h6->Fill(phiStar[i]);
