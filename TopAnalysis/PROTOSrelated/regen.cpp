@@ -252,15 +252,15 @@ void regen()
 //    }
 
     
-    TH1F *h3 = new TH1F("CosTheta", "CosTheta", 30, -1.5, 3);
+    TH1F *h3 = new TH1F("CosTheta", "CosTheta", 30, -1, 1);
     h3 -> SetMarkerStyle(2);
-    TH1F *h4 = new TH1F("Phi", "Phi", 30, -1, 6);
+    TH1F *h4 = new TH1F("Phi", "Phi", 30, 0, M_PI);
     h4 -> SetMarkerStyle(2);
-    TH1F *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1.5, 3);
+    TH1F *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1, 1);
     h5 -> SetMarkerStyle(2);
-    TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, -6, 6);
+    TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, 0, M_PI);
     h6 -> SetMarkerStyle(2);
-    TH1F *h7 = new TH1F("CosThetaX", "CosThetaX", 30, -1.5, 3);
+    TH1F *h7 = new TH1F("CosThetaX", "CosThetaX", 30, -1, 1);
     h7 -> SetMarkerStyle(2);
     //TRatioPlot *rp = new TRatioPlot(h3);
     for (int i=0; i < top.size(); i++) {
@@ -279,9 +279,13 @@ void regen()
     TCanvas *c3 = new TCanvas("c3","Top Rest Frane");
     c3->Divide(2,1);
     c3->cd(1);
+    h3->Scale(1/h3->Integral());
+    h3->SetMinimum(0);
     h3 ->Draw("P");
     h3->Fit("pol2");
     c3->cd(2);
+    h4->Scale(1/h4->Integral());
+    h4->SetMinimum(0);
     h4->Draw("P");
     h4->Fit("gaus");
 
@@ -289,16 +293,22 @@ void regen()
     TCanvas *c4 = new TCanvas("c4","W Rest Frame");
     c4->Divide(2,1);
     c4->cd(1);
+    h5->Scale(1/h5->Integral());
+    h5->SetMinimum(0);
     h5 ->Draw("P");
     h5->Fit("pol2");
     c4->cd(2);
+    h6->Scale(1/h6->Integral());
+    h6->SetMinimum(0);
     h6->Draw("P");
     h6->Fit("gaus");
     
     TCanvas *c5 = new TCanvas("c5","ThetaX");
+    h7->Scale(1/h7->Integral());
+    h7->SetMinimum(0);
     h7->Draw("P");
     h7->Fit("pol2");
-
+    
 }
 
 
