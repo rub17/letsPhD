@@ -139,7 +139,7 @@ double particleMass(int id)
 void regen()
 {
     gROOT->Reset();
-    std::ifstream inStream("../Events/tbj.unw");
+    std::ifstream inStream("../Events/tbj.wgt");
     std::vector<singleTop> sT;
     
     while (!inStream.eof()) {
@@ -154,12 +154,13 @@ void regen()
     std::vector<TLorentzVector> top;
     std::vector<TLorentzVector> W;
     std::vector<TLorentzVector> quarkSpec;
+    
 
     std::vector<double> cosTheta;
     std::vector<double> phi;
     std::vector<double> cosThetaStar;
     std::vector<double> phiStar;
-    
+    std::vector<double> cosThetaX;
 
     for (int i = 0; i < sT.size(); i++) {
         TLorentzVector currentParticle;
@@ -167,7 +168,8 @@ void regen()
         double numberCosThetaStar;
         double anglePhi;
         double anglePhiStar;
-
+        double numberCosThetaX;
+        TLorentzVector q;
         
         TVector3 T;
         TVector3 N;
@@ -214,6 +216,8 @@ void regen()
         
         currentParticle = neutrinos.back() + leptons.back(); // W = N + lepton
         W.push_back(currentParticle);
+        q = currentParticle;
+        q.Boost(-top.back().BoostVector());
         
         numberCosTheta = getAngleCosTheta(top.back(),quarkSpec.back(),W.back());
         cosTheta.push_back(numberCosTheta);
@@ -225,14 +229,17 @@ void regen()
         Z = W.back().Vect();
         Z.SetMag(1);
         
-        anglePhi = getAnglePhi(top.back(),quarkSpec.back(),W.back(),T);// phi = angle between x axis and W's projection on x-y plane.
+        anglePhi = getAnglePhi(top.back(),quarkSpec.back(),q,T);// phi = angle between x axis and W's projection on x-y plane.
         phi.push_back(anglePhi);
 
         numberCosThetaStar = getAngleCosThetaStar(W.back(),leptons.back(),W.back());
         cosThetaStar.push_back(numberCosThetaStar);
         
-        anglePhiStar = getAnglePhi(W.back(),leptons.back(),W.back(),T);// phi* = angle between x axis and l's projection on x-y plane (W                                         frame).
+        anglePhiStar = getAnglePhi(W.back(),leptons.back(),q,T);// phi* = angle between x axis and l's projection on x-y plane (W                                         frame).
         phiStar.push_back(anglePhiStar);
+        
+        numberCosThetaX = getAngleCosTheta(top.back(),quarkSpec.back(),leptons.back());
+        cosThetaX.push_back(numberCosThetaX);
     }
     
 
@@ -253,12 +260,15 @@ void regen()
     h5 -> SetMarkerStyle(2);
     TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, -6, 6);
     h6 -> SetMarkerStyle(2);
-    
+    TH1F *h7 = new TH1F("CosThetaX", "CosThetaX", 30, -1.5, 3);
+    h7 -> SetMarkerStyle(2);
+    //TRatioPlot *rp = new TRatioPlot(h3);
     for (int i=0; i < top.size(); i++) {
         h3->Fill(cosTheta[i]);
         h4->Fill(phi[i]);
         h5->Fill(cosThetaStar[i]);
         h6->Fill(phiStar[i]);
+        h7->Fill(cosThetaX[i]);
     }
 
 //    TCanvas *c1 = new TCanvas("c1","c1");
@@ -284,6 +294,11 @@ void regen()
     c4->cd(2);
     h6->Draw("P");
     h6->Fit("gaus");
+    
+    TCanvas *c5 = new TCanvas("c5","ThetaX");
+    h7->Draw("P");
+    h7->Fit("pol2");
+
 }
 
 
