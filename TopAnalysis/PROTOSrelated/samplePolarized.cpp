@@ -141,9 +141,6 @@ void samplePolarized()
     gROOT->Reset();
     std::ifstream inStream("../Events/tbj.unw");
     std::vector<singleTop> sT;
-    std::random_device seed;
-    std::mt19937 engine(seed);
-    std::uniform_double_distribution flatDist(0,1);
     
     while (!inStream.eof()) {
         singleTop a;
@@ -163,8 +160,8 @@ void samplePolarized()
 //    std::vector<double> cosThetaStar;
 //    std::vector<double> phiStar;
     
-    TF1 *f1 = new TF1("theta","1 + cos(x)",0,M_PI);
-    TRandom *r1 = new TRandom();
+    //TF1 *f1 = new TF1("theta","1 + cos(x)",0,M_PI);
+   // TRandom *r1 = new TRandom();
     for (int i = 0; i < sT.size(); i++) {
         TLorentzVector top;
         TLorentzVector W;

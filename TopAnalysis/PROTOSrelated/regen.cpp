@@ -22,13 +22,16 @@ double getAngleCosTheta (TLorentzVector restParticle, TLorentzVector particleOne
     return cosTheta;
 };
 
-double getAngleCosThetaStar (TLorentzVector restParticle, TLorentzVector particleOne,TLorentzVector particleTwo) {
+double getAngleCosThetaStar (TLorentzVector boostOne, TLorentzVector boostTwo,TLorentzVector particleOne,TLorentzVector particleTwo) {
     
-    TLorentzVector restFrame = restParticle;
+    TLorentzVector boost1 = boostOne;
+    TLorentzVector boost2 = boostTwo;
     TLorentzVector particle1 = particleOne;
     TLorentzVector particle2 = particleTwo;
     
-    particle1.Boost(-restFrame.BoostVector());
+    particle1.Boost(-boost1.BoostVector());
+    boost2.Boost(-boost1.BoostVector());
+    particle1.Boost(-boost2.BoostVector());
     
     double cosTheta = particle1.Vect().Dot(particle2.Vect())/particle1.Vect().Mag()/particle2.Vect().Mag();
 
@@ -47,14 +50,42 @@ double getAnglePhi (TLorentzVector restParticle, TLorentzVector particleOne,TLor
     TVector3 x = x_axis;
     TVector3 part;
     
-    particle1.Boost(restFrame.BoostVector());
+    particle1.Boost(-restFrame.BoostVector());
+    part = particle1.Vect();
+    TVector3 partz = part.Dot(z)*z;
+    part = part - partz;
+//    std::cout<<"-----> "<<std::endl;
+//    TVector3 part_norm = part;
+//    part_norm.SetMag(1);
+//    part_norm.Print();
+//    x.Print();
+    
+//    double cosPhi =  part.Dot(x)/part.Mag()/x.Mag();
+//    double Angle = acos(cosPhi);
+    double Angle = part.Angle(x);
+
+    return Angle;
+};
+
+double getAnglePhiStar (TLorentzVector boostOne, TLorentzVector boostTwo, TLorentzVector particleOne, TLorentzVector z_axis,TVector3 x_axis) { //Due to the relatively complex setup, we will need x-axis in the right frame to be provided for the routine; in other words, it does not boost the last argument input. Double check if the x-axis is boosted in the frame that's described in the first input.
+    
+    TLorentzVector boost1 = boostOne;
+    TLorentzVector boost2 = boostTwo;
+    TLorentzVector particle1 = particleOne;
+    TVector3 z = z_axis.Vect();
+    z.SetMag(1);
+    TVector3 x = x_axis;
+    TVector3 part;
+    
+    particle1.Boost(-boost1.BoostVector());
+    particle1.Boost(-boost2.BoostVector());
     part = particle1.Vect();
     part = part - part.Dot(z)*z;
     
     double cosPhi =  part.Dot(x)/part.Mag()/x.Mag();
     double Angle = acos(cosPhi);
-//    double Angle = part.Angle(x);
-
+    //    double Angle = part.Angle(x);
+    
     return Angle;
 };
 
@@ -162,7 +193,7 @@ void regen()
     std::vector<double> phiStar;
     std::vector<double> cosThetaX;
 
-    for (int i = 0; i < sT.size(); i++) {
+    for (int i = 0; i < 1000; i++) { //sT.size()
         TLorentzVector currentParticle;
         double numberCosTheta;
         double numberCosThetaStar;
@@ -170,7 +201,8 @@ void regen()
         double anglePhiStar;
         double numberCosThetaX;
         TLorentzVector q;
-        
+        TLorentzVector St;
+    
         TVector3 T;
         TVector3 N;
         TVector3 Z;
@@ -222,20 +254,23 @@ void regen()
         numberCosTheta = getAngleCosTheta(top.back(),quarkSpec.back(),W.back());
         cosTheta.push_back(numberCosTheta);
         
-        N = quarkSpec.back().Vect().Cross(W.back().Vect());  //N = st X q; N-->y;
-        T = W.back().Vect().Cross(N); // T = q X N; T-->x
+        St = quarkSpec.back();
+        St.Boost(-top.back().BoostVector());
+        
+        N = St.Vect().Cross(q.Vect());  //N = st X q; N-->y;
         N.SetMag(1);
+        T = q.Vect().Cross(N); // T = q X N; T-->x
         T.SetMag(1);
-        Z = W.back().Vect();
+        Z = q.Vect();
         Z.SetMag(1);
         
         anglePhi = getAnglePhi(top.back(),quarkSpec.back(),q,T);// phi = angle between x axis and W's projection on x-y plane.
         phi.push_back(anglePhi);
 
-        numberCosThetaStar = getAngleCosThetaStar(W.back(),leptons.back(),W.back());
+        numberCosThetaStar = getAngleCosThetaStar(top.back(),W.back(),leptons.back(),q);
         cosThetaStar.push_back(numberCosThetaStar);
         
-        anglePhiStar = getAnglePhi(W.back(),leptons.back(),q,T);// phi* = angle between x axis and l's projection on x-y plane (W                                         frame).
+        anglePhiStar = getAnglePhiStar(top.back(),W.back(),leptons.back(),q,T);// phi* = angle between x axis and l's projection on x-y plane (W                                         frame).
         phiStar.push_back(anglePhiStar);
         
         numberCosThetaX = getAngleCosTheta(top.back(),quarkSpec.back(),leptons.back());
@@ -254,21 +289,22 @@ void regen()
     
     TH1F *h3 = new TH1F("CosTheta", "CosTheta", 30, -1, 1);
     h3 -> SetMarkerStyle(2);
-    TH1F *h4 = new TH1F("Phi", "Phi", 30, 0, M_PI);
+    //h3 -> GetXaxis()->
+    TH1F *h4 = new TH1F("Phi", "Phi", 300, -M_PI, M_PI);
     h4 -> SetMarkerStyle(2);
     TH1F *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1, 1);
     h5 -> SetMarkerStyle(2);
-    TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, 0, M_PI);
+    TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, -M_PI, M_PI);
     h6 -> SetMarkerStyle(2);
     TH1F *h7 = new TH1F("CosThetaX", "CosThetaX", 30, -1, 1);
     h7 -> SetMarkerStyle(2);
     //TRatioPlot *rp = new TRatioPlot(h3);
     for (int i=0; i < top.size(); i++) {
-        h3->Fill(cosTheta[i]);
-        h4->Fill(phi[i]);
-        h5->Fill(cosThetaStar[i]);
-        h6->Fill(phiStar[i]);
-        h7->Fill(cosThetaX[i]);
+        h3->Fill(cosTheta[i],sT[i].weight);
+        h4->Fill(phi[i],sT[i].weight);
+        h5->Fill(cosThetaStar[i],sT[i].weight);
+        h6->Fill(phiStar[i],sT[i].weight);
+        h7->Fill(cosThetaX[i],sT[i].weight);
     }
 
 //    TCanvas *c1 = new TCanvas("c1","c1");
@@ -286,9 +322,7 @@ void regen()
     c3->cd(2);
     h4->Scale(1/h4->Integral());
     h4->SetMinimum(0);
-    h4->Draw("P");
-    h4->Fit("gaus");
-
+    h4->Draw();
 
     TCanvas *c4 = new TCanvas("c4","W Rest Frame");
     c4->Divide(2,1);
@@ -309,6 +343,7 @@ void regen()
     h7->Draw("P");
     h7->Fit("pol2");
     
+    std::cout << "Integral of CosTheta* = " << h5->Integral() << std::endl;
 }
 
 
