@@ -15,8 +15,9 @@ double getAngleCosTheta (TLorentzVector restParticle, TLorentzVector particleOne
     particle1.Boost(-restFrame.BoostVector());
     particle2.Boost(-restFrame.BoostVector());
 
-    double Angle = particle1.Angle(particle2.Vect());
-    double cosTheta = cos(Angle);
+    double cosTheta = particle1.Vect().Dot(particle2.Vect())/particle1.Vect().Mag()/particle2.Vect().Mag();
+//    double Angle = particle1.Angle(particle2.Vect());
+//    double cosTheta = cos(Angle);
     
     return cosTheta;
 };
@@ -29,8 +30,10 @@ double getAngleCosThetaStar (TLorentzVector restParticle, TLorentzVector particl
     
     particle1.Boost(-restFrame.BoostVector());
     
-    double Angle = particle1.Angle(particle2.Vect());
-    double cosTheta = cos(Angle);
+    double cosTheta = particle1.Vect().Dot(particle2.Vect())/particle1.Vect().Mag()/particle2.Vect().Mag();
+
+//    double Angle = particle1.Angle(particle2.Vect());
+//    double cosTheta = cos(Angle);
     
     return cosTheta;
 };
@@ -44,11 +47,13 @@ double getAnglePhi (TLorentzVector restParticle, TLorentzVector particleOne,TLor
     TVector3 x = x_axis;
     TVector3 part;
     
-    particle1.Boost(-restFrame.BoostVector());
+    particle1.Boost(restFrame.BoostVector());
     part = particle1.Vect();
     part = part - part.Dot(z)*z;
     
-    double Angle = part.Angle(x);
+    double cosPhi =  part.Dot(x)/part.Mag()/x.Mag();
+    double Angle = acos(cosPhi);
+//    double Angle = part.Angle(x);
 
     return Angle;
 };
@@ -240,13 +245,13 @@ void regen()
 //    }
 
     
-    TH1F *h3 = new TH1F("CosTheta", "CosTheta", 30, -1.5, 1.5);
+    TH1F *h3 = new TH1F("CosTheta", "CosTheta", 30, -1.5, 3);
     h3 -> SetMarkerStyle(2);
-    TH1F *h4 = new TH1F("Phi", "Phi", 30, -1.5, 1.5);
+    TH1F *h4 = new TH1F("Phi", "Phi", 30, -1, 6);
     h4 -> SetMarkerStyle(2);
-    TH1F *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1.5, 1.5);
+    TH1F *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1.5, 3);
     h5 -> SetMarkerStyle(2);
-    TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, -1.5, 1.5);
+    TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, -6, 6);
     h6 -> SetMarkerStyle(2);
     
     for (int i=0; i < top.size(); i++) {
