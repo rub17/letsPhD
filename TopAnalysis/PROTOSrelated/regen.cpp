@@ -41,19 +41,23 @@ double getAngleCosThetaStar (TLorentzVector boostOne, TLorentzVector boostTwo,TL
     return cosTheta;
 };
 
-double getAnglePhi (TLorentzVector restParticle, TLorentzVector particleOne,TLorentzVector z_axis,TVector3 x_axis) { //Due to the relatively complex setup, we will need x-axis in the right frame to be provided for the routine; in other words, it does not boost the last argument input. Double check if the x-axis is boosted in the frame that's described in the first input.
+double getAnglePhi (TLorentzVector restParticle, TLorentzVector particleOne,TLorentzVector z_axis,TVector3 x_axis, TVector3 y_axis) { //Due to the relatively complex setup, we will need x-axis in the right frame to be provided for the routine; in other words, it does not boost the last argument input. Double check if the x-axis is boosted in the frame that's described in the first input.
 
     TLorentzVector restFrame = restParticle;
     TLorentzVector particle1 = particleOne;
     TVector3 z = z_axis.Vect();
     z.SetMag(1);
     TVector3 x = x_axis;
+    TVector3 y = y_axis;
     TVector3 part;
     
     particle1.Boost(-restFrame.BoostVector());
     part = particle1.Vect();
     TVector3 partz = part.Dot(z)*z;
     part = part - partz;
+    double part_X = part.Dot(x);
+    double part_Y = part.Dot(y);
+    double Angle = atan2(part_Y,part_X);
 //    std::cout<<"-----> "<<std::endl;
 //    TVector3 part_norm = part;
 //    part_norm.SetMag(1);
@@ -62,11 +66,11 @@ double getAnglePhi (TLorentzVector restParticle, TLorentzVector particleOne,TLor
     
 //    double cosPhi =  part.Dot(x)/part.Mag()/x.Mag();
 //    double Angle = acos(cosPhi);
-    double Angle = part.Angle(x);
+//    double Angle = part.Angle(x);
 
     return Angle;
 };
-
+//Dont need this:
 double getAnglePhiStar (TLorentzVector boostOne, TLorentzVector boostTwo, TLorentzVector particleOne, TLorentzVector z_axis,TVector3 x_axis) { //Due to the relatively complex setup, we will need x-axis in the right frame to be provided for the routine; in other words, it does not boost the last argument input. Double check if the x-axis is boosted in the frame that's described in the first input.
     
     TLorentzVector boost1 = boostOne;
@@ -78,12 +82,13 @@ double getAnglePhiStar (TLorentzVector boostOne, TLorentzVector boostTwo, TLoren
     TVector3 part;
     
     particle1.Boost(-boost1.BoostVector());
+    boost2.Boost(-boost1.BoostVector());
     particle1.Boost(-boost2.BoostVector());
     part = particle1.Vect();
     part = part - part.Dot(z)*z;
     
     double cosPhi =  part.Dot(x)/part.Mag()/x.Mag();
-    double Angle = acos(cosPhi);
+    double Angle = acos(cosPhi); //use atan2;
     //    double Angle = part.Angle(x);
     
     return Angle;
@@ -193,7 +198,7 @@ void regen()
     std::vector<double> phiStar;
     std::vector<double> cosThetaX;
 
-    for (int i = 0; i < 1000; i++) { //sT.size()
+    for (int i = 0; i < sT.size(); i++) {
         TLorentzVector currentParticle;
         double numberCosTheta;
         double numberCosThetaStar;
@@ -257,20 +262,20 @@ void regen()
         St = quarkSpec.back();
         St.Boost(-top.back().BoostVector());
         
-        N = St.Vect().Cross(q.Vect());  //N = st X q; N-->y;
+        N = St.Vect().Cross(q.Vect());  //N = st X q; N--> -y;
         N.SetMag(1);
         T = q.Vect().Cross(N); // T = q X N; T-->x
         T.SetMag(1);
         Z = q.Vect();
         Z.SetMag(1);
         
-        anglePhi = getAnglePhi(top.back(),quarkSpec.back(),q,T);// phi = angle between x axis and W's projection on x-y plane.
+        anglePhi = getAnglePhi(top.back(),quarkSpec.back(),q,T,-N);// phi = angle between x axis and W's projection on x-y plane.
         phi.push_back(anglePhi);
 
         numberCosThetaStar = getAngleCosThetaStar(top.back(),W.back(),leptons.back(),q);
         cosThetaStar.push_back(numberCosThetaStar);
         
-        anglePhiStar = getAnglePhiStar(top.back(),W.back(),leptons.back(),q,T);// phi* = angle between x axis and l's projection on x-y plane (W                                         frame).
+        anglePhiStar = getAnglePhi(W.back(),leptons.back(),q,T,-N);// phi* = angle between x axis and l's projection on x-y plane (W                                         frame).
         phiStar.push_back(anglePhiStar);
         
         numberCosThetaX = getAngleCosTheta(top.back(),quarkSpec.back(),leptons.back());
@@ -289,16 +294,18 @@ void regen()
     
     TH1F *h3 = new TH1F("CosTheta", "CosTheta", 30, -1, 1);
     h3 -> SetMarkerStyle(2);
-    //h3 -> GetXaxis()->
+    h3 -> GetXaxis()->SetTitle("cos(#theta)");
     TH1F *h4 = new TH1F("Phi", "Phi", 300, -M_PI, M_PI);
-    h4 -> SetMarkerStyle(2);
+    h4 -> GetXaxis()->SetTitle("#phi");
     TH1F *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1, 1);
     h5 -> SetMarkerStyle(2);
+    h5 -> GetXaxis()->SetTitle("cos(#theta *)");
     TH1F *h6 = new TH1F("PhiStar", "PhiStar", 30, -M_PI, M_PI);
     h6 -> SetMarkerStyle(2);
+    h6 -> GetXaxis()->SetTitle("#phi *");
     TH1F *h7 = new TH1F("CosThetaX", "CosThetaX", 30, -1, 1);
     h7 -> SetMarkerStyle(2);
-    //TRatioPlot *rp = new TRatioPlot(h3);
+    h7 -> GetXaxis()->SetTitle("cos(#theta x)");
     for (int i=0; i < top.size(); i++) {
         h3->Fill(cosTheta[i],sT[i].weight);
         h4->Fill(phi[i],sT[i].weight);
@@ -322,7 +329,7 @@ void regen()
     c3->cd(2);
     h4->Scale(1/h4->Integral());
     h4->SetMinimum(0);
-    h4->Draw();
+    h4->Draw("H");
 
     TCanvas *c4 = new TCanvas("c4","W Rest Frame");
     c4->Divide(2,1);
@@ -343,7 +350,6 @@ void regen()
     h7->Draw("P");
     h7->Fit("pol2");
     
-    std::cout << "Integral of CosTheta* = " << h5->Integral() << std::endl;
 }
 
 
