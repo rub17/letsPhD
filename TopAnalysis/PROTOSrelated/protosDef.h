@@ -90,6 +90,13 @@ double getCosTheta(TLorentzVector restParticle, TLorentzVector particleOne,TLore
 
 double getPhi (TLorentzVector restParticle, TLorentzVector particle,TVector3 x_axis, TVector3 y_axis,TVector3 z_axis);
 
+TLorentzVector getNeutrino(singleTop sT);
+
+TLorentzVector getLepton(singleTop sT);
+
+TLorentzVector getBottom(singleTop sT);
+
+TLorentzVector getQuarkSpec(singleTop sT);
 
 #endif /* protosDef_h */
 
