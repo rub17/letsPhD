@@ -24,7 +24,8 @@ void protosGen()
     h3 -> SetMarkerStyle(2);
     h3 -> GetXaxis()->SetTitle("cos(#theta)");
     
-    auto *h4 = new TH1F("Phi", "Phi", 30, -3.5, 3.5);
+    auto *h4 = new TH1F("Phi", "Phi", 30, -2*M_PI, 2*M_PI);
+    h4 -> SetMarkerStyle(2);
     h4 -> GetXaxis()->SetTitle("#phi");
     
     auto *h5 = new TH1F("CosThetaStar", "CosThetaStar", 30, -1, 1);
@@ -43,6 +44,7 @@ void protosGen()
         TLorentzVector top;
         TLorentzVector W;
         TLorentzVector bottom;
+        TLorentzVector antiBottom;
         TLorentzVector quarkSpec;
         TLorentzVector lepton;
         TLorentzVector neutrino;
@@ -61,6 +63,7 @@ void protosGen()
         neutrino = getNeutrino(sT[i]);
         lepton = getLepton(sT[i]);
         bottom = getBottom(sT[i]);
+        antiBottom = getAntiBottom(sT[i]);
         quarkSpec = getQuarkSpec(sT[i]);
         
         buffer = quarkSpec;
@@ -81,8 +84,14 @@ void protosGen()
         T = q.Cross(N); //X-axis defined. T = q X N.
         T.SetMag(1);
 
+        buffer.SetPxPyPzE(0,0,0,1); //Setting an arbitrary lab frame vector.
+        TVector3 labX(1,0,0);
+        TVector3 labY(0,1,0);
+        TVector3 labZ(0,0,1);
+
         cosTheta = getCosTheta(top,quarkSpec,W);
-        phi = getPhi(top,quarkSpec,T,-N,q);// phi = angle between x axis and W's projection on x-y plane.
+        phi = getPhi(buffer,W,labX,labY,labZ) - getPhi(buffer,quarkSpec,labX,labY,labZ);// phi = angle between x axis and W's projection on x-y plane.
+    
         cosThetaStar = getCosTheta(W,lepton,-bottom); //bottom quark points at the opposite direction of W in top.
         phiStar = getPhi(W,lepton,T,-N,q);// phi* = angle between x axis and l's projection on x-y plane (W frame).
         cosThetaX = getCosTheta(top,quarkSpec,lepton);
@@ -111,8 +120,9 @@ void protosGen()
     c3->cd(2);
     h4->Scale(1/h4->Integral());
     h4->SetMinimum(0);
-    h4->Draw("H");
-
+    h4->Draw("P");
+    h4->Fit("pol9");
+    
     auto *c4 = new TCanvas("c4","W Rest Frame");
     c4->Divide(2,1);
     c4->cd(1);

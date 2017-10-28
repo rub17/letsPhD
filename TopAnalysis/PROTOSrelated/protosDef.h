@@ -96,6 +96,8 @@ TLorentzVector getLepton(singleTop sT);
 
 TLorentzVector getBottom(singleTop sT);
 
+TLorentzVector getAntiBottom(singleTop sT);
+
 TLorentzVector getQuarkSpec(singleTop sT);
 
 #endif /* protosDef_h */

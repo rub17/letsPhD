@@ -35,6 +35,18 @@ TLorentzVector getBottom(singleTop sT){
     return bottom;
 }
 
+TLorentzVector getAntiBottom(singleTop sT){
+    TLorentzVector antiBottom;
+    antiBottom.SetPxPyPzE(sT.bblvq[3].pX,
+                      sT.bblvq[3].pY,
+                      sT.bblvq[3].pZ,
+                      sqrt(pow(sT.bblvq[3].pX,2)
+                           +pow(sT.bblvq[3].pY,2)
+                           +pow(sT.bblvq[3].pZ,2)
+                           +pow(particleMass(sT.bblvq[3].particleId),2)));
+    return antiBottom;
+}
+
 TLorentzVector getQuarkSpec(singleTop sT){
     TLorentzVector quarkSpec;
     quarkSpec.SetPxPyPzE(sT.bblvq[4].pX,
